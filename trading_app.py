@@ -5,12 +5,14 @@ from data_provider.data_provider import DataProvider
 from trading_director.trading_director import TradingDirector
 
 from interfaces.symbolsType import SymbolsType
+from interfaces.timeframeType import TimeframeType
 
 if __name__ == "__main__":
     
     # Definición de variables necesarias para la estrategia
-    symbols: list[SymbolsType] = ['EURUSD', 'USDJPY', 'GBPUSD', 'USDCAD']
-    timeframe = '1min'
+    # symbols: list[SymbolsType] = ['EURUSD', 'USDJPY', 'GBPUSD', 'USDCAD']
+    symbols: list[SymbolsType] = ['EURUSD', 'USDJPY']
+    timeframe: TimeframeType = 'M1'
     
     
     # Creación de la cola de ventos principal

@@ -32,7 +32,7 @@ class DataProvider():
         self.symbols: list[SymbolsType] = symbol_list
         self.timeframe: TimeframeType = timeframe
         # Creamos un diccionario para guardar el datetime de la última vela que habíamos visto para cada símbolo
-        self.last_bar_datetime: Dict[SymbolsType, datetime] = {symbol: datetime.min for symbol in self.symbols}
+        self.last_bar_datetime: Dict[SymbolsType, datetime] = {symbol: datetime.min for symbol in self.symbols} # se veria asi: {'EURUSD': datetime.min, 'USDJPY': datetime.min, ...}
 
 
 
@@ -92,30 +92,30 @@ class DataProvider():
         from_position = 1
         num_bars = 1
         try:
-            bars_np_array = mt5.copy_rates_from_pos(symbol, tf, from_position, num_bars)
+            bars_np_array = mt5.copy_rates_from_pos(symbol, tf, from_position, num_bars) # Recuperamos un array de numpy con los datos de la última vela
             if bars_np_array is None:
                 print_error(f"{Utils.dateprint()} - El símbolo {symbol} no existe o no se han podido recuperar su datos")
-                # Vamos a devolver una Series empty
-                return pd.Series()
+                return pd.Series() # Vamos a devolver una Series empty para que no de error en el código que lo llame
             
-            bars = pd.DataFrame(bars_np_array)
+            bars_pd = pd.DataFrame(bars_np_array) # Convertimos el array de numpy en un DataFrame de pandas
             
             # Convertimos la columna time a datetime y la hacemos el índice
-            bars['time'] = pd.to_datetime(bars['time'], unit='s')
-            bars.set_index('time', inplace=True)
+            bars_pd['time'] = pd.to_datetime(bars_pd['time'], unit='s')
+            bars_pd.set_index('time', inplace=True)
             
             # Cambiamos nombres de columnas y las reorganizamos
-            bars.rename(columns={'tick_volume': 'tickvol', 'real_volume': 'vol'}, inplace=True)
-            bars = bars[['open', 'high', 'low', 'close', 'tickvol', 'vol', 'spread']]
+            bars_pd.rename(columns={'tick_volume': 'tickvol', 'real_volume': 'vol'}, inplace=True) # inplace=True es para que modifique el DataFrame original
+            bars_pd = bars_pd[['open', 'high', 'low', 'close', 'tickvol', 'vol', 'spread']] # cambiamos el orden de las columnas
 
         except Exception as e:
             print_exception(f"No se han podido recuperar los datos de la última vela de {symbol} {timeframe} - MT5 Error: {mt5.last_error()}, exception: {e}")
+        
         else:
             # Si el DF está vacío, devolvemos una serie vacía
-            if bars.empty:
+            if bars_pd.empty:
                 return pd.Series()
             else:
-                return bars.iloc[-1]
+                return bars_pd.iloc[-1] # retornamos la última fila del DataFrame que es la última vela cerrada
 
 
 
@@ -204,15 +204,15 @@ class DataProvider():
         """
         # 1- Comprobar si hay datos nuevos para cada símbolo
         for symbol in self.symbols:
-            # Acceder a sus últimos datos disponibles
-            latest_bar = self.get_latest_closed_bar(symbol, self.timeframe)
+            # Acceder a sus últimos datos disponibles, es una serie de pandas pero se puede acceder con el punto, sus valores para acceder serian open, high, low, close, tickvol, vol, spread
+            latest_bar = self.get_latest_closed_bar(symbol, self.timeframe) 
             
             if latest_bar is None:
                 continue
             
+            # *si hay datos, se agrega un evento a la cola de eventos, esto para cada símbolo
+            # latest_bar.name es el datetime - es decir si la nueva vela tiene una fecha mayor a la última vela que teníamos se ejecuta la condicion
             if not latest_bar.empty and latest_bar.name > self.last_bar_datetime[symbol]:
-                # Actualizar ultima vela recuperada
-                self.last_bar_datetime[symbol] = latest_bar.name
-                # creamos DataEvent y lo añadimos a la cola de eventos
-                data_event = DataEvent(symbol=symbol, data=latest_bar)
+                self.last_bar_datetime[symbol] = latest_bar.name # Actualizar ultima vela recuperada
+                data_event = DataEvent(symbol=symbol, data=latest_bar) # creamos DataEvent y lo añadimos a la cola de eventos
                 self.events_queue.put(data_event)
