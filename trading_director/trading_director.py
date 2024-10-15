@@ -3,14 +3,16 @@ import queue
 import time
 
 from data_provider.data_provider import DataProvider
+from signal_generator.interfaces.signal_generator_interface import ISignalGenerator
 
-from events.events import DataEvent
+from events.events import DataEvent, SignalEvent
 from utils.colored_print import print_warning, print_info, print_error
 from utils.utils import Utils
 
 class TradingDirector():
     
-    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider):
+    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider, signal_generator: ISignalGenerator
+                ):
         """
         Initializes the TradingDirector object.
 
@@ -30,6 +32,7 @@ class TradingDirector():
         
         # Referencia a los distintos módulos
         self.DATA_PROVIDER = data_provider
+        self.SIGNAL_GENERATOR = signal_generator
         # ........
         
         # Creación del event handler
@@ -53,9 +56,9 @@ class TradingDirector():
             None
         """
         print_info(f"{Utils.dateprint()} - Recibido DATA EVENT de {event.symbol} - Último precio de cierre: {event.data.close}")
-        pass
+        self.SIGNAL_GENERATOR.generate_signal(event)
     
-    def _handle_signal_event(self, event):
+    def _handle_signal_event(self, event: SignalEvent):
         """
         Handle the signal event.
 
@@ -65,7 +68,8 @@ class TradingDirector():
         Returns:
             None
         """
-        pass
+        print_info(f"{Utils.dateprint()} - Recibido SIGNAL EVENT de {event.symbol} - Señal: {event.signal}")
+        # ! - self.POSITION_SIZER
     
     def _handle_sizing_event(self, event):
         """
@@ -175,7 +179,7 @@ class TradingDirector():
             
             except queue.Empty:
                 # Si no hay un evento en cola, caemos en el except y comprobamos si hay nuevos datos
-                print_info(f"{Utils.dateprint()} - No hay eventos en cola. Comprobando nuevos datos...")
+                print(f"{Utils.dateprint()} - No hay eventos en cola. Comprobando nuevos datos...")
                 self.DATA_PROVIDER.check_for_new_data()
             
             else:

@@ -1,6 +1,10 @@
 from enum import Enum
 from pydantic import BaseModel
+from datetime import datetime
+
 import pandas as pd
+
+from interfaces import symbolsType
 
 # *=========== Definimos los tipos de Enums que se utilizaran
 class EventType(str, Enum):
@@ -59,11 +63,11 @@ class DataEvent(BaseEvent):
         data (pd.Series): The data associated with the event.
     """
     event_type: EventType = EventType.DATA
-    symbol: str
+    symbol: symbolsType
     data: pd.Series
 
 
-# Evento de ...
+# Evento de obtencion de datos para validar una señal
 class SignalEvent(BaseEvent):
     """
     Represents a signal event in the trading system.
@@ -78,7 +82,14 @@ class SignalEvent(BaseEvent):
         sl (float): The stop loss level for the order.
         tp (float): The take profit level for the order.
     """
-    pass
+    event_type: EventType = EventType.SIGNAL
+    symbol: symbolsType
+    signal: SignalType # BUY - SELL
+    target_order: OrderType # MARKET - LIMIT - STOP
+    target_price: float
+    magic_number: int
+    sl: float
+    tp: float
 
 
 # Evento de ...
@@ -97,7 +108,15 @@ class SizingEvent(BaseEvent):
         tp (float): The take profit value of the event.
         volume (float): The volume of the event.
     """
-    pass
+    event_type: EventType = EventType.SIZING
+    symbol: symbolsType
+    signal: SignalType
+    target_order: OrderType
+    target_price: float
+    magic_number: int
+    sl: float
+    tp: float
+    volume: float
 
 
 # Evento de ...
@@ -116,7 +135,15 @@ class OrderEvent(BaseEvent):
         tp (float): The take profit level of the order.
         volume (float): The volume of the order.
     """
-    pass
+    event_type: EventType = EventType.ORDER
+    symbol: symbolsType
+    signal: SignalType
+    target_order: OrderType
+    target_price: float
+    magic_number: int
+    sl: float
+    tp: float
+    volume: float
 
 
 # Evento de ...
@@ -132,7 +159,12 @@ class ExecutionEvent(BaseEvent):
         fill_time (datetime): The timestamp of the trade execution.
         volume (float): The volume of the executed trade.
     """
-    pass
+    event_type: EventType = EventType.EXECUTION
+    symbol: symbolsType
+    signal: SignalType
+    fill_price: float
+    fill_time: datetime
+    volume: float
 
 
 # Evento de ...
@@ -151,5 +183,13 @@ class PlacedPendingOrderEvent(BaseEvent):
         tp (float): The take profit level for the order.
         volume (float): The volume of the order.
     """
-    pass
+    event_type: EventType = EventType.PENDING
+    symbol: str
+    signal: SignalType
+    target_order: OrderType
+    target_price: float
+    magic_number: int
+    sl: float
+    tp: float
+    volume: float
 
