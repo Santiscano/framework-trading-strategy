@@ -13,9 +13,10 @@ if __name__ == "__main__":
     
     # Definición de variables necesarias para la estrategia
     # symbols: list[SymbolsType] = ['EURUSD', 'USDJPY', 'GBPUSD', 'USDCAD']
-    symbols: list[SymbolsType] = ['EURUSD', 'USDJPY']
+    symbols: list[SymbolsType] = [SymbolsType.EURUSD, SymbolsType.USDJPY]
     timeframe: TimeframeType = 'M1'
     
+    # Estrategia de cruce de medias móviles
     mac_props = MACrossoverProps(timeframe=timeframe,
                                 fast_period=50,
                                 slow_period=200)

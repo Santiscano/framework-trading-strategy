@@ -68,7 +68,7 @@ class TradingDirector():
         Returns:
             None
         """
-        print_info(f"{Utils.dateprint()} - Recibido SIGNAL EVENT de {event.symbol} - Señal: {event.signal}")
+        print_warning(f"{Utils.dateprint()} - Recibido SIGNAL EVENT de {event.symbol} - Señal: {event.signal}")
         # ! - self.POSITION_SIZER
     
     def _handle_sizing_event(self, event):
