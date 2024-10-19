@@ -7,7 +7,7 @@ from position_sizer.position_sizer import PositionSizer
 from signal_generator.interfaces.signal_generator_interface import ISignalGenerator
 
 from events.events import DataEvent, SignalEvent
-from utils.colored_print import print_warning, print_info, print_error
+from utils.utils import print_warning, print_info, print_error
 from utils.utils import Utils
 
 class TradingDirector():

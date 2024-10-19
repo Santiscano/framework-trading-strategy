@@ -3,8 +3,7 @@ from dotenv import load_dotenv, find_dotenv
 
 import MetaTrader5 as mt5
 
-from utils.utils import Utils
-from utils.colored_print import print_error, print_info, print_success, print_warning, print_exception
+from utils.utils import Utils, print_error, print_info, print_success, print_warning, print_exception
 from interfaces.symbolsType import SymbolsType
 
 class PlatformConnector:

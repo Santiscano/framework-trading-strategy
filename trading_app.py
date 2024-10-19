@@ -39,11 +39,14 @@ if __name__ == "__main__":
     
     POSITION_SIZER = PositionSizer(events_queue=events_queue,
                                     data_provider=DATA_PROVIDER,
-                                    sizing_properties=MinSizingProps())
+                                    # sizing_properties=MinSizingProps())
+                                    # sizing_properties=FixedSizingProps(volume=0.5))
+                                    sizing_properties=RiskPctSizingProps(risk_pct=0.02)) # 2% del capital
     
     # Creación del director de trading y ejecución del bucle principal
     TRADING_DIRECTOR = TradingDirector(events_queue=events_queue,
                                         data_provider=DATA_PROVIDER,
-                                        signal_generator=SIGNAL_GENERATOR)
+                                        signal_generator=SIGNAL_GENERATOR,
+                                        position_sizer=POSITION_SIZER)
     
     TRADING_DIRECTOR.execute()

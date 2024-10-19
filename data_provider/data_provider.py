@@ -4,7 +4,7 @@ from queue import Queue
 import MetaTrader5 as mt5
 import pandas as pd
 
-from utils.colored_print import print_exception, print_error
+from utils.utils import print_exception, print_error
 from utils.utils import Utils
 from events.events import DataEvent
 

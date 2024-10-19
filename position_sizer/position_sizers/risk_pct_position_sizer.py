@@ -5,7 +5,7 @@ from events.events import SignalEvent
 
 from ..interfaces.position_sizer_interface import IPositionSizer
 from ..properties.position_sizer_properties import RiskPctSizingProps
-from utils.colored_print import print_error
+from utils.utils import print_error
 from utils.utils import Utils
 
 class RiskPctPositionSizer(IPositionSizer):

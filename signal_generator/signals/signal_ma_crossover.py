@@ -3,7 +3,7 @@ from data_provider.data_provider import DataProvider
 from ..interfaces.signal_generator_interface import ISignalGenerator
 from ..properties.signal_generator_properties import MACrossoverProps
 
-from utils.colored_print import print_exception
+from utils.utils import print_exception
 from interfaces.symbolsType import SymbolsType
 
 import pandas as pd

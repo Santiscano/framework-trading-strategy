@@ -3,8 +3,7 @@ from queue import Queue
 
 from data_provider.data_provider import DataProvider
 from events.events import SignalEvent, SizingEvent
-from utils.utils import Utils
-from utils.colored_print import print_exception, print_error
+from utils.utils import Utils, print_error, print_exception
 from .interfaces.position_sizer_interface import IPositionSizer
 from .properties.position_sizer_properties import BaseSizerProps, MinSizingProps, FixedSizingProps, RiskPctSizingProps
 from .position_sizers.min_size_position_sizer import MinSizePositionSizer

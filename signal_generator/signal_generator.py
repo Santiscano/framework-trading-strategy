@@ -6,7 +6,7 @@ from .properties.signal_generator_properties import BaseSignalProps, MACrossover
 from .signals.signal_ma_crossover import SignalMACrossover
 from .signals.signal_rsi_mr import SignalRSI
 from data_provider.data_provider import DataProvider
-from utils.colored_print import print_exception
+from utils.utils import print_exception
 
 
 class SignalGenerator(ISignalGenerator):
