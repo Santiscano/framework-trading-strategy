@@ -9,7 +9,6 @@ class MinSizingProps(BaseSizerProps):
 class FixedSizingProps(BaseSizerProps):
     """
     Represents the properties for fixed sizing of positions.
-
     Attributes:
         volume (float): The fixed volume for each position.
     """
@@ -18,7 +17,6 @@ class FixedSizingProps(BaseSizerProps):
 class RiskPctSizingProps(BaseSizerProps):
     """
     Properties for risk percentage position sizing.
-
     Attributes:
         risk_pct (float): The risk percentage for position sizing.
     """

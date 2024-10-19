@@ -7,7 +7,15 @@ from events.events import SignalEvent
 from ..interfaces.position_sizer_interface import IPositionSizer
 
 class MinSizePositionSizer(IPositionSizer):
+    """
+    return the minimum volume allowed for a given symbol.
     
+    Params:
+        - signal_event (SignalEvent): The signal event containing the trading signal.
+        - data_provider (DataProvider): The data provider object.
+    
+    Return: float 
+    """
     def size_signal(self, signal_event: SignalEvent, data_provider: DataProvider) -> float:
         volume = mt5.symbol_info(signal_event.symbol).volume_min
         

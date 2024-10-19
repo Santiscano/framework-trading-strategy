@@ -1,7 +1,11 @@
 import MetaTrader5 as mt5
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from .colored_print import print_exception, print_error
+from colorama import Fore, Style
+
+import MetaTrader5 as mt5
+
+# from .colored_print import print_exception, print_error
 from interfaces.symbolsType import SymbolsType
 
 class Utils():
@@ -12,20 +16,18 @@ class Utils():
         """
         pass
 
+
     # Creamos nuestro método estático con el decorador @staticmethod
     @staticmethod
     def convert_currency_amount_to_another_currency(amount: float, from_ccy: str, to_ccy: str) -> float:
         """
         Converts the given amount from one currency to another.
-        
         Args:
             amount (float): The amount to be converted.
             from_ccy (str): The currency code of the source currency.
             to_ccy (str): The currency code of the target currency.
-        
         Returns:
             float: The converted amount.
-        
         Raises:
             Exception: If the symbol is not available in the MT5 platform.
         """
@@ -60,7 +62,6 @@ class Utils():
             return converted_amount
 
 
-
     @staticmethod
     def dateprint() -> str:
         """
@@ -68,3 +69,21 @@ class Utils():
         The timezone used is "Asia/Nicosia".
         """
         return datetime.now(ZoneInfo("Asia/Nicosia")).strftime("%d/%m/%Y %H:%M:%S.%f")[:-3]
+
+
+
+def print_error(message):
+    print(f"{Fore.RED}[ERROR] {message}{Style.RESET_ALL}")
+
+def print_warning(message):
+    print(f"{Fore.YELLOW}[WARNING] {message}{Style.RESET_ALL}")
+
+def print_success(message):
+    print(f"{Fore.GREEN}[SUCCESS] {message}{Style.RESET_ALL}")
+
+def print_info(message):
+    print(f"{Fore.BLUE}[INFO] {message}{Style.RESET_ALL}")
+    
+def print_exception(message):
+    mt5.shutdown()
+    raise Exception(f"{Fore.RED}[Exception] {Utils.dateprint()} - {message}{Style.RESET_ALL}")

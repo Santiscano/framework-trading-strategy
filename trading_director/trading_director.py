@@ -3,6 +3,7 @@ import queue
 import time
 
 from data_provider.data_provider import DataProvider
+from position_sizer.position_sizer import PositionSizer
 from signal_generator.interfaces.signal_generator_interface import ISignalGenerator
 
 from events.events import DataEvent, SignalEvent
@@ -11,11 +12,10 @@ from utils.utils import Utils
 
 class TradingDirector():
     
-    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider, signal_generator: ISignalGenerator
-                ):
+    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider, signal_generator: ISignalGenerator,
+                position_sizer: PositionSizer):
         """
         Initializes the TradingDirector object.
-
         Args:
             events_queue (queue.Queue): The queue to receive events.
             data_provider (DataProvider): The data provider object.
@@ -33,6 +33,8 @@ class TradingDirector():
         # Referencia a los distintos módulos
         self.DATA_PROVIDER = data_provider
         self.SIGNAL_GENERATOR = signal_generator
+        self.POSITION_SIZER = position_sizer
+        # self.RISK_MANAGER
         # ........
         
         # Creación del event handler
@@ -48,40 +50,39 @@ class TradingDirector():
     def _handle_data_event(self, event: DataEvent):
         """
         Handle the data event.
-
         Args:
             event (DataEvent): The data event object.
-
         Returns:
             None
         """
+        # Aquí dentro gestionamos los eventos de tipo DataEvent
         print_info(f"{Utils.dateprint()} - Recibido DATA EVENT de {event.symbol} - Último precio de cierre: {event.data.close}")
         self.SIGNAL_GENERATOR.generate_signal(event)
-    
+
+
     def _handle_signal_event(self, event: SignalEvent):
         """
         Handle the signal event.
-
         Args:
             event (SignalEvent): The signal event object.
-
         Returns:
             None
         """
-        print_warning(f"{Utils.dateprint()} - Recibido SIGNAL EVENT de {event.symbol} - Señal: {event.signal}")
-        # ! - self.POSITION_SIZER
-    
+        # Procesamos el signal event
+        print_warning(f"{Utils.dateprint()} - Recibido SIGNAL EVENT de {event.symbol} - para la Señal: {event.signal}")
+        self.POSITION_SIZER.size_signal(event)
+
+
     def _handle_sizing_event(self, event):
         """
         Handle the sizing event.
-
         Args:
             event (SizingEvent): The sizing event object.
-
         Returns:
             None
         """
-        pass
+        print_warning(f"{Utils.dateprint()} - Recibido SIZING EVENT con volumen {event.volume} para Señal: {event.signal} en {event.symbol}")
+        # self.RISK_MANAGER
 
     def _handle_order_event(self, event):
         """
@@ -93,7 +94,7 @@ class TradingDirector():
         Returns:
             None
         """
-        pass
+        print_warning(f"{Utils.dateprint()} - ")
     
     def _handle_execution_event(self, event):
         """
@@ -105,7 +106,7 @@ class TradingDirector():
         Returns:
             None
         """
-        pass
+        print_warning(f"{Utils.dateprint()} - ")
 
     def _handle_pending_order_event(self, event):
         """
@@ -117,7 +118,7 @@ class TradingDirector():
         Returns:
             None
         """
-        pass
+        print_warning(f"{Utils.dateprint()} - ")
 
     def _process_execution_or_pending_events(self, event):
         """
@@ -129,7 +130,7 @@ class TradingDirector():
         Returns:
             None
         """
-        pass
+        print_warning(f"{Utils.dateprint()} - ")
 
     def _handle_none_event(self, event):
         """

@@ -82,6 +82,7 @@ class RiskPctPositionSizer(IPositionSizer):
             monetary_risk = equity * self.risk_pct
             volume = monetary_risk / (price_distance_in_integer_ticksizes * tick_value_account_ccy)
             volume = round(volume / volume_step) * volume_step # normalizamos el volumen al step más cercano por ejemplo seria de tener 0.573289 a 0.57
+        
         except Exception as e:
             print_error(f"{Utils.dateprint()} - ERROR: Problema al calcular el tamaño de la posición en función del riesgo. Excepción: {e}")
             return 0.0

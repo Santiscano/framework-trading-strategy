@@ -2,9 +2,12 @@ from queue import Queue
 
 from platform_connector.platform_connector import PlatformConnector
 from data_provider.data_provider import DataProvider
-from trading_director.trading_director import TradingDirector
 from signal_generator.signal_generator import SignalGenerator
 from signal_generator.properties.signal_generator_properties import MACrossoverProps, RSIProps
+from position_sizer.position_sizer import PositionSizer
+from position_sizer.properties.position_sizer_properties import MinSizingProps, FixedSizingProps, RiskPctSizingProps
+
+from trading_director.trading_director import TradingDirector
 
 from interfaces.symbolsType import SymbolsType
 from interfaces.timeframeType import TimeframeType
@@ -33,6 +36,10 @@ if __name__ == "__main__":
     SIGNAL_GENERATOR = SignalGenerator(events_queue=events_queue,
                                         data_provider=DATA_PROVIDER,
                                         signal_properties=mac_props)
+    
+    POSITION_SIZER = PositionSizer(events_queue=events_queue,
+                                    data_provider=DATA_PROVIDER,
+                                    sizing_properties=MinSizingProps())
     
     # Creación del director de trading y ejecución del bucle principal
     TRADING_DIRECTOR = TradingDirector(events_queue=events_queue,

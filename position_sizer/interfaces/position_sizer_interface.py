@@ -4,6 +4,8 @@ from data_provider.data_provider import DataProvider
 
 
 class IPositionSizer(Protocol):
-    
+    """
+    Interface for the PositionSizer class.
+    """
     def size_signal(self, signal_event: SignalEvent, data_provider: DataProvider) -> float | None:
         ...
