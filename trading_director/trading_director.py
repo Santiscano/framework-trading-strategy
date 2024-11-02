@@ -3,17 +3,22 @@ import queue
 import time
 
 from data_provider.data_provider import DataProvider
-from position_sizer.position_sizer import PositionSizer
 from signal_generator.interfaces.signal_generator_interface import ISignalGenerator
+from position_sizer.position_sizer import PositionSizer
+from risk_manager.risk_manager import RiskManager
+# order_executor
+# notifications
 
-from events.events import DataEvent, SignalEvent
+from events.events import DataEvent, SignalEvent, SizingEvent, OrderEvent
 from utils.utils import print_warning, print_info, print_error
 from utils.utils import Utils
 
 class TradingDirector():
     
-    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider, signal_generator: ISignalGenerator,
-                position_sizer: PositionSizer):
+    def __init__(self, events_queue: queue.Queue, data_provider: DataProvider, 
+                signal_generator: ISignalGenerator, position_sizer: PositionSizer,
+                risk_manager: RiskManager
+                ):
         """
         Initializes the TradingDirector object.
         Args:
@@ -34,7 +39,9 @@ class TradingDirector():
         self.DATA_PROVIDER = data_provider
         self.SIGNAL_GENERATOR = signal_generator
         self.POSITION_SIZER = position_sizer
-        # self.RISK_MANAGER
+        self.RISK_MANAGER = risk_manager
+        # self.ORDER_EXECUTOR
+        # self.NOTIFICATIONS
         # ........
         
         # Creación del event handler
@@ -73,7 +80,7 @@ class TradingDirector():
         self.POSITION_SIZER.size_signal(event)
 
 
-    def _handle_sizing_event(self, event):
+    def _handle_sizing_event(self, event: SizingEvent):
         """
         Handle the sizing event.
         Args:
@@ -82,19 +89,19 @@ class TradingDirector():
             None
         """
         print_warning(f"{Utils.dateprint()} - Recibido SIZING EVENT con volumen {event.volume} para Señal: {event.signal} en {event.symbol}")
-        # self.RISK_MANAGER
+        self.RISK_MANAGER.assess_order(event)
 
-    def _handle_order_event(self, event):
+
+    def _handle_order_event(self, event: OrderEvent):
         """
         Handle the order event.
-
         Args:
             event (OrderEvent): The order event object.
-
         Returns:
             None
         """
-        print_warning(f"{Utils.dateprint()} - ")
+        print_warning(f"{Utils.dateprint()} - Recibido ORDER EVENT con volumen {event.volume} para {event.signal} en {event.symbol}")
+        # self.ORDER_EXECUTOR
     
     def _handle_execution_event(self, event):
         """

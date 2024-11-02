@@ -1,15 +1,18 @@
 from queue import Queue
 
+from signal_generator.properties.signal_generator_properties import MACrossoverProps, RSIProps
 from platform_connector.platform_connector import PlatformConnector
 from data_provider.data_provider import DataProvider
-from signal_generator.signal_generator import SignalGenerator
-from signal_generator.properties.signal_generator_properties import MACrossoverProps, RSIProps
-from position_sizer.position_sizer import PositionSizer
-from position_sizer.properties.position_sizer_properties import MinSizingProps, FixedSizingProps, RiskPctSizingProps
 from portfolio.portfolio import Portfolio
-
+# executor
+from signal_generator.signal_generator import SignalGenerator
+from position_sizer.position_sizer import PositionSizer
+from risk_manager.risk_manager import RiskManager
+# notification
 from trading_director.trading_director import TradingDirector
 
+from position_sizer.properties.position_sizer_properties import MinSizingProps, FixedSizingProps, RiskPctSizingProps
+from risk_manager.properties.risk_manager_properties import MaxLeverageFactorRiskProps
 from interfaces.symbolsType import SymbolsType
 from interfaces.timeframeType import TimeframeType
 
@@ -50,10 +53,19 @@ if __name__ == "__main__":
                                     # sizing_properties=FixedSizingProps(volume=0.5))
                                     sizing_properties=RiskPctSizingProps(risk_pct=0.02)) # 2% del capital
     
+    
+    # Nivel maximo de riesgo en base al apalancamiento 
+    # TODO: "Mas adelante debo crear uno para que trabaje en base la un maximo de exposicion basado en los stops los de las posiciones abiertas"
+    RISK_MANAGER = RiskManager(events_queue=events_queue,
+                               data_provider=DATA_PROVIDER,
+                               portfolio=PORTFOLIO,
+                               risk_properties=MaxLeverageFactorRiskProps(max_leverage_factor=5))
+
     # Creación del director de trading y ejecución del bucle principal
     TRADING_DIRECTOR = TradingDirector(events_queue=events_queue,
                                         data_provider=DATA_PROVIDER,
                                         signal_generator=SIGNAL_GENERATOR,
-                                        position_sizer=POSITION_SIZER)
+                                        position_sizer=POSITION_SIZER,
+                                        risk_manager=RISK_MANAGER)
     
     TRADING_DIRECTOR.execute()

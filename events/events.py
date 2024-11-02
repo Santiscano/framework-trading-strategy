@@ -92,7 +92,7 @@ class SignalEvent(BaseEvent):
     tp: float
 
 
-# Evento de ...
+# Evento de definicion de tamaño de la operacion
 class SizingEvent(BaseEvent):
     """
     Represents a sizing event.
@@ -119,7 +119,7 @@ class SizingEvent(BaseEvent):
     volume: float
 
 
-# Evento de ...
+# Evento de generacion de orden segun señal y riesgo definido a asumir
 class OrderEvent(BaseEvent):
     """
     Represents an order event.

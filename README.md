@@ -1,6 +1,11 @@
 # framework-trading-strategy
 
 
+###
+chat con analisis tecnico chatgpt
+https://chatgpt.com/c/6715bc01-cfe8-8011-b997-5eb18020a2b7
+https://chatgpt.com/g/g-pJz5haCIR-trading-bot-advisor/c/6715d970-0a28-8011-885b-b979360762c9
+
 #### Videos tutorial talib
 https://www.youtube.com/shorts/ntucyOqbwaA -> talib libreria financiera
 
